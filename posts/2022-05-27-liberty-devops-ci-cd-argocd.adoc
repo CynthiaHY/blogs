@@ -9,7 +9,7 @@ seo-description: How to build a DevOps pipeline for a cloud-native Java applicat
 blog_description: How to build a DevOps pipeline for a cloud-native Java application with Jenkins and ArgoCD.
 open-graph-image: https://openliberty.io/img/blog/liberty-devops-generic-architecture.png
 ---
-= CD/CD pipeline with ArgoCD - A solution to configuration drift
+= CI/CD pipeline with ArgoCD - A solution to configuration drift
 Shamjith Antholi <https://github.com/shamjithantholi>
 :imagesdir: /
 :url-prefix:
@@ -29,7 +29,7 @@ In this blog post, I will assume that you have a basic understanding of Git, Doc
 
 == Setup development pipeline and associated configurations
 
-Create 3 branches in associated github repository, 'develop', 'test' and 'master' (or 'main'). Development team will work on the code in 'develop' branch, quality testing team will work on 'test' branch and production deployment team will work on 'master' (or 'main') branch. 
+Create 3 branches in associated github repository, 'dev', 'staging' and 'production'. Development team will work on the code in 'dev' branch, testing team will work on 'staging' branch and production deployment team will work on the 'production' branch. 
 
 You can setup the Jenkins pipeline on development environment using the steps in the blog link:https://openliberty.io/blog/2022/05/27/liberty-devops-ci-cd-jenkins.html[CI/CD with Jenkins], the steps explained in this blog will serve as the code build and container image generation step required for this jenkins and argocd pipeline. 
 
