@@ -26,7 +26,7 @@ This post demonstrates on how to run a MicroProfile application on Open Liberty 
 == What is Serverless?
 Serverless is short for serverless computing, which is an execution model in which the cloud provider allocates resources on demand. Serverless enables you to concentrate on your applications without needing to manage servers.
 
-It does not mean no server is running in the background. On the contrary, serverless architecture contains servers, however the cloud provider is responsible for provisioning, maintaining, and scaling the server infrastructure without developer interaction.
+It does not mean no server is running in the background. On the contrary, serverless architecture contains servers, however the cloud provider is responsible for provisioning, maintaining, and scaling the server infrastructure without operator interaction.
 
 Serverless is traditionally seen in the form of a functions and is sometimes referred to _Function as a Service_ (FaaS). However in recent years Container as a Service (CaaS) offerings have started to become available that have key characteristics that mean they are considered Serverless.
 
