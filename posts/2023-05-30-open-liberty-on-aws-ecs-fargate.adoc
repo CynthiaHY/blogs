@@ -5,19 +5,19 @@ title: "Running Open Liberty on AWS Elastic Container Service with Fargate"
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/abutch3r
 author_github: https://github.com/abutch3r
-seo-title: Running Open Liberty on AWS Elastic Container Service with Fargate - OpenLiberty.io
-seo-description: How to run Open Liberty in AWS Elastic Container Service with Fargate
+seo-title: Running Open Liberty on Amazon Elastic Container Service with AWS Fargate - OpenLiberty.io
+seo-description: How to run Open Liberty in Amazon Elastic Container Service with AWS Fargate
 blog_description: "How to run Open Liberty in AWS Elastic Container Service with Fargate"
 open-graph-image: https://openliberty.io/img/twitter_card.jpg
 open-graph-image-alt: Open Liberty Logo
 ---
-= Running Open Liberty on AWS Elastic Container Service with Fargate
+= Running Open Liberty on Amazon Elastic Container Service with AWS Fargate
 Alex Butcher <https://github.com/abutch3r>
 :imagesdir: /
 :url-prefix:
 :url-about: /
 
-Serverless applications, which allocate resources on demand, continue to be a hot topic in 2023. With MicroProfile widely adopted by cloud native applications, many developers want to know:
+Serverless applications, which are allocated resources on demand, continue to be a hot topic in 2023. With MicroProfile widely adopted by cloud native applications, many developers want to know:
 
 _How to run MicroProfile applications in Amazon Elastic Container Service in a Serverless manner?_
 
@@ -58,7 +58,7 @@ As we enter the serverless era, it is very important to get MicroProfile applica
 == Deploying an Open Liberty Container to Amazon ECS
 
 === Pre-requisites
-Before you start, you will need the following prerequisites:
+Before you start, at a minimum you will need the following prerequisites:
 
 * An https://aws.amazon.com/[AWS] account
 ** Permission to create, edit and delete Amazon ECS clusters, Task Definitions and Services*
@@ -70,7 +70,7 @@ Before you start, you will need the following prerequisites:
 * https://maven.apache.org/[Maven]
 * An externally accessible container registry that can host your images such as Amazon Elastic Container Registry(Amazon ECR) or Dockerhub.
 
-&#42; If your AWS account is an Administrator you will have all of the required permissions. However, if you are not, then the set of permissions required can be found in <<AWS_Permissions, AWS Permission Mapping>>
+&#42; If your AWS account is an Administrator you will have all of the required permissions already. However, if you are not, then the set of permissions required can be found in <<AWS_Permissions, AWS Permissions Mapping>>
 
 === Create your MicroProfile application
 In this post, we use https://openliberty.io/guides/getting-started.html[OpenLiberty Getting Started guide] to get a simple MicroProfile application that is well suited to run in a serverless environment.
@@ -102,14 +102,14 @@ When creating the definitions within Amazon ECS, the default ports throughout th
 If you want to change the ports Open Liberty is listening on you can update the `server.xml` with https://openliberty.io/docs/latest/reference/default-port-numbers.html[this setting].
 You will also need to expose the ports on the container
 
-=== Uploading the container
-Amazon ECS supports a range of registries outlined in their https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_image[Image Registry requirements].
+=== Uploading the container to a registry
+Amazon ECS supports a range of container registries outlined in their https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definition_image[Image Registry requirements].
 
 Depending on your choice of registry follow the steps provided by it for uploading the image.
 
 As this blog requires an AWS account, you are most likely to have access to Amazon ECR to act as your registry using these instructions to https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-console.html[get started].
 
-For this blog we will use IBM Cloud Container Registry (ICCR) as our registry using a publicly accessible image to show the ability to use an external registry.
+For this blog we will use a publicly accessible image available on IBM Cloud Container Registry (ICCR).
 
 === Creating your Amazon ECS Cluster
 To create your Amazon ECS cluster follow step 1. in https://docs.aws.amazon.com/AmazonECS/latest/developerguide/getting-started-fargate.html[Getting started with the console using Linux containers on AWS Fargate].
@@ -368,20 +368,40 @@ Having created the service with 0 running tasks, it is now time to start running
 === Making requests to our service
 With the service started we can now start to use it.
 
-The first step is to get the DNS name for the Load Balancer. We can get the DNS name for the load balancer either from the load balancer itself or from the associated Service.
+The first step is to get the DNS name for the Load Balancer. We can get the DNS name for the load balancer either from the load balancer itself or from the target Service.
 
-.Getting the DNS name from your Load Balancer
+.Obtaining the DNS name from your Load Balancer
 . Go to the EC2 Service
 . Select `Load Balancers` under `Load Balancing`
 ` Copy the address from the `DNS name` column
 
-.Getting the DNS name of your Load Balancer from the Service
-. Got to your cluster
+.Obtaining the DNS name of your Load Balancer from the Service
+. Go to your cluster
 . Select your Service
 . Go to the Networking tab
 . Either copy or click `open address`
 
+As we used the Open Liberty `getting-started` image, the application and in particular the web front end is hosted on the root (`/`) of the server. So we can take the copied URL and insert in our browser's address bar to get the application page. The application page will then call the RESTful endpoints in the application to get us the server details, such as its health, config and metrics.
+
+image::/img/blog/amazon_ecs_hosted_page.png[Amazon ECS Open Liberty Application Web Page, width=70%,align="center"]
+
 === Monitoring our service
+
+With the Service started, we can start to monitor it using the provided AWS tooling.
+
+==== CPU and Memory usage
+
+Within the service definition we can see a level of CPU and memory usage
+
+image::/img/blog/amazon_ecs_service_health.png[Amazon ECS Service health ,width=70%,align="center"]
+
+==== Logs
+
+Amazon ECS captures the log information from the instances and provides them in the `Logs` tab within the Service.
+
+Each log line is an individual row within the list that is produced within the tab allowing for easier filtering and searching of events and are recoverable post pod termination.
+
+If you have multiple instances of the container running then all of the messages will appear in the table together, though will state which instance they came from. You can review logs of individual instances by clicking on the links.
 
 === Scaling your application via auto-scaling policies
 Manually scaling is ok for testing, but in production we want the environment to use performance indicators to make scaling decisions for us.
@@ -391,22 +411,59 @@ Scaling policies can be applied and adjusted after the Service has been created.
 The policy allows you to define:
 
 * Number of tasks (instances of your application)
-    * Minimum number (>=0)
+    * Minimum number (>=0 &amp; \<= desired tasks)
     * Maximum number (>=0)
 * Scaling metric
 ** Percentage of CPU
 ** Percentage of Memory
-** Number of ALB Requests
+** Number of ALB Requests over a period of time
 * Threshold relative to the metric
 * Scale in and out periods
 
 The metrics use CloudWatch data and associated "alarms" to trigger automated scale out actions and reviews them based on the periods set to.
 
-The minimum number of tasks can be set to 0, however as Amazon ECS cannot scale up from 0, then the value in setting the minimum to 0 is nil
+The minimum number of tasks can be set to 0, however as Amazon ECS cannot scale up from 0, then the value in setting the minimum to 0 is limited unless you are completely stopping the service.
 
-The `Desired Tasks` value will override portions of the scaling policy, primarily the minimum number of tasks.
+For Open Liberty, all 3 scaling metrics can be used. The decision as to which as metric to use relates to the nature of the application that has been deployed on to Open Liberty. If you have requests that are CPU heavy, then CPU based alarms would be the recommendation, however if you have high volume, but low CPU requests then ALB requests* might be a better fit.
 
-For Open Liberty, all 3 scaling metrics can be used. The decision as to which as metric to use relates to the nature of the application that has been deployed on to Open Liberty. If you have requests that are CPU heavy, then CPU based alarms would be the recommendation, however if you have high volume, but low CPU requests then ALB requests might be a better fit.
+ECS Scaling policies are split into 2 alarms:
+
+* Scaling out
+* Scaling in
+
+The first alarm is the primary one that we set and AWS will provide a metric definition for scaling in that is matched to the scaling out definition, Though both can be adjusted independently of the Service definition.
+
+The alarms gather CloudWatch data based on their metric over time, this is to try and prevent accidental scaling events of both out and in. If an instance were to experience a short high load period, then when compared to corresponding data points, where we are at typical workload then the alarm is not triggered and we don't spin up unneeded instances. For scaling in, this is the reverse in that we don't ideally want to terminate instances that might be handling workload
+
+Given for this blog, we have given our instances a very small amount of memory and CPU, it is best that we use ALB as our scaling metric as it is either to easy to scale on CPU given we can easily hit high CPU values without any significant workload or to hard to do so based on memory.
+
+To create an ALB request Scaling policy, we shall edit our instance:
+
+. Go to your cluster
+. Select your Service
+. Select `Update service`
+. Set the `Desired tasks` to `1`
+. Expand `Service auto scaling`
+. Set the minimum to `1`
+. Set the maximum to `2`
+. Click `+ Add scaling policy`
+. Give your policy a name e.g. `mp-sp`
+. Set the `ECS service metric` to `ALBRequestCountPerTarget`
+. Set the Target value to `2`
+. Set `Scale out cooldown period` to `30`
+. Set `Scale in cooldown period` to `30`
+. Click Update
+
+The target value is set to a very low value so that it is easier to cause a scaling out alarm to trigger and create new instances. This value should be scoped to the requirements of the application and also that the amount of other resources provided are capable of handling that type of workload.
+
+image::../img/blog/amazon_ecs_scaling_policy.png[Amazon ECS scaling policy, width=70%,align="center"]
+
+Having created our policy we can now try to cause the alarm to trigger and cause our service to increase the number of instances available.
+As we are looking at requests against the ALB, we just need to invoke our applications URL to generate some traffic.
+
+Given that it requires 3 datapoints above our target in a given period, we just need to invoke
+
+image::/img/blog/amazon_ecs_scaled_instances.png[Amazon ECS scaled out service, width=70%,align="center"]
 
 ==== Using CloudWatch Metrics
 
@@ -448,6 +505,19 @@ Some of these are not directory used, however if not granted can cause in partic
 
 .Amazon ECS & AWS EC2
 https://docs.aws.amazon.com/AmazonECS/latest/developerguide/security-iam-awsmanpol.html#security-iam-awsmanpol-AmazonECS_FullAccess[Amazon ECS & AWS EC2 Full Access Permissions] cover the majority of permissions for standard creation and deletion and also includes Amazon CloudWatch.
+
+.Amazon CloudWatch
+To get Metrics data for use with alarms
+[source]
+----
+CloudWatch:getMetricsdata
+----
+
+To view logs for individual instances - this is only required if looking at individual task instances
+[source]
+----
+logs:GetLogEvents
+----
 
 .Amazon Certificate Manager
 https://docs.aws.amazon.com/acm/latest/userguide/authen-apipermissions.html[Amazon Certificate Manager Permissions]
