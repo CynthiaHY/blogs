@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Jakarta EE 10, MicroProfile 6, and Java SE 20 support in Open Liberty 23.0.0.3"
+title: Open Liberty 23.0.0.3里对Jakarta EE 10, MicroProfile 6, 和Java SE 20的支持
 # Do NOT change the categories section
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/mbroz2
 author_github: https://github.com/mbroz2
-seo-title: Jakarta EE 10, MicroProfile 6, and Java SE 20 support in Open Liberty 23.0.0.3 - OpenLiberty.io
+seo-title: Open Liberty 23.0.0.3里对Jakarta EE 10, MicroProfile 6, 和Java SE 20的支持 - OpenLiberty.io
 seo-description: General availability of Jakarta EE 10 (Core Profile, Web Profile, and Platform), MicroProfile 6, and Java SE 20 support in Open Liberty 23.0.0.3 for Java developers to build cloud-native applications using the latest open specifications (APIs).
 blog_description: We're thrilled to announce the release of Open Liberty 23.0.0.3, one of the biggest releases of the runtime since its debut over 5 years ago!  This release includes Jakarta EE 10 (Core Profile, Web Profile, and Platform), MicroProfile 6, and Java SE 20 support.
 open-graph-image: https://openliberty.io/img/twitter_card.jpg
@@ -13,20 +13,23 @@ open-graph-image-alt: Open Liberty Logo
 blog-available-in-languages:
 - lang: ja
   path: /ja/blog/2023/04/04/23.0.0.3.html
+- lang: zh-Hans
+  path: /zh-Hans/2023/07/24/23.0.0.3.html
 ---
-= Jakarta EE 10, MicroProfile 6, and Java SE 20 support in Open Liberty 23.0.0.3
+= Open Liberty 23.0.0.3里对Jakarta EE 10, MicroProfile 6, 和Java SE 20的支持
 Michal Broz <https://github.com/mbroz2>
 :imagesdir: /
 :url-prefix:
 :url-about: /
 //Blank line here is necessary before starting the body of the post.
 
-We're thrilled to announce the release of Open Liberty 23.0.0.3, one of the biggest releases of the runtime since its debut over 5 years ago!  This release includes Jakarta EE 10 Platform, Web Profile, and, for the first time, Core Profile.  Many new enhancements are added throughout most of the features that make up the profiles.
+翻译：Cynthia Zhang
 
+我们很高兴地宣布 Open Liberty 23.0.0.3发布了，这是自 5 年前首次亮相以来最大的运行时版本之一！ 此版本包括 Jakarta EE 10 Platform、Web Profile，并且首次包含Core Profile。还在构成profiles的大部分功能中添加了许多新的增强功能。
 
-MicroProfile 6, which includes Jakarta EE Core Profile 10, also makes its formal debut in the 23.0.0.3 release.  It includes the new MicroProfile Telemetry 1.0 feature as well as updates to the Metrics, OpenAPI, and JWT Authentication specifications.
+包含Jakarta EE Core Profile 10的MicroProfile 6也将在23.0.0.3版本中正式亮相。它包括新的MicroProfile Telemetry 1.0特性，以及对Metrics、OpenAPI和JWT Authentication规范的更新。
 
-Support for Java SE 20, the latest version as of this writing, is also introduced in the 23.0.0.3 release and provides various new features and changes. Many notable bug fixes are also included in this Open Liberty release.
+在23.0.0.3发行版中还引入了对Java SE 20(撰写本文时的最新版本)的支持，并提供了各种新特性和更改。许多值得注意的错误修复也包含在这个Open Liberty版本中。
 
 
 In link:{url-about}[Open Liberty] 23.0.0.3:
