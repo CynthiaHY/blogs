@@ -1,38 +1,48 @@
 ---
 layout: post
-title: "How to package your cloud-native Java application for rapid startup"
+title: "实现快速启动云原生Java应用程序的打包方法"
 # Do NOT change the categories section
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/tjwatson
 author_github: https://github.com/tjwatson
-seo-title: How to package your cloud-native Java application for rapid startup - OpenLiberty.io
-seo-description: Did you know you can re-package your cloud-native Java applications to start up in milliseconds, without compromising on throughput, memory, development-production parity, or Java language features? And with little to no refactoring of the application code? Here’s how…
-blog_description: "Did you know you can re-package your cloud-native Java applications to start up in milliseconds, without compromising on throughput, memory, development-production parity, or Java language features? And with little to no refactoring of the application code? Here’s how…"
+seo-title: 实现快速启动云原生Java应用程序的打包方法 - OpenLiberty.io
+seo-description: 您是否知道我们可以重新打包云原生Java应用程序，使其以毫秒为单位启动，而不会影响吞吐量、内存、开发-生产对等性或Java语言特性？并且不需要重构应用程序代码吗？方法就是……
+blog_description: "您是否知道我们可以重新打包云原生Java应用程序，使其以毫秒为单位启动，而不会影响吞吐量、内存、开发-生产对等性或Java语言特性？并且不需要重构应用程序代码吗？方法就是……"
 open-graph-image: https://openliberty.io/img/blog/checkpoint4.png
 open-graph-image-alt: InstantOn checkpoint and restore process
 additional_authors:
 - name: Vijay Sundaresan
   github: https://github.com/vijaysun-omr
   image: https://avatars0.githubusercontent.com/vijaysun-omr
+
 - name: Laura Cowen
   github: https://github.com/lauracowen
   image: https://avatars0.githubusercontent.com/lauracowen
+
+- name: 张海燕 (翻译)
+  github: https://github.com/CynthiaHY
+  image: https://avatars0.githubusercontent.com/CynthiaHY
+
 blog-available-in-languages:
+- lang: en
+  path: /blog/2023/06/29/rapid-startup-instanton.html
 - lang: ja
   path: /ja/blog/2023/06/29/rapid-startup-instanton.html
+
 ---
-= How to package your cloud-native Java application for rapid startup
+= 实现快速启动云原生Java应用程序的打包方法
 Thomas Watson <https://github.com/tjwatson>
 :imagesdir: /
 :url-prefix:
 :url-about: /
 //Blank line here is necessary before starting the body of the post.
 
-Did you know you can repackage your cloud-native Java applications to start in milliseconds, without compromising throughput, memory, development-production parity, or Java language features? And with little to no refactoring of the application code? Here’s how…
+您是否知道我们可以重新打包云原生Java应用程序，使其以毫秒为单位启动，而不会影响吞吐量、内存、开发-生产对等性或Java语言特性？并且不需要重构应用程序代码吗？方法就是……
 
-== The need for speed at startup
+== 提高启动速度的必要性
 
 In serverless environments, scale-to-zero can help reduce the overall cloud costs for deployed applications by shutting down unneeded application instances when no ongoing requests exist. When activity picks up for the application, new instances can start quickly, without introducing noticeable delays for the application end user.
+在无服务器（serverless）环境中，通过在没有请求处理时关闭不需要的应用程序实例，缩容至0（scale-to-zero）可以帮助降低部署应用程序的总体云成本。当应用程序的活动开始时，新的实例能快速启动，而不会给应用程序终端用户带来明显的延迟。
 
 Despite improvements to JDK technology that make it start in less than 1 second, like class data sharing and dynamic AOT compilation, it still cannot start fast enough to support scale-to-zero. However, the JDK is important for optimizing throughput and memory, ensuring development-production parity, and enabling a full range of Java language features. So how do we improve startup time while also benefiting from running on the full JDK?
 
