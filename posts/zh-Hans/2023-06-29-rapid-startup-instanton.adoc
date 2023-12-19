@@ -69,9 +69,9 @@ For more information about the runtime and host build system prerequisites, see 
 
 == 创建一个应用程序WAR文件
 
-If you don’t have an application of your own handy, you can follow along with an example application from the link:/guides/getting-started.html[Getting started with Open Liberty guide].
+如果您手上没有自己的应用程序，您可以按照link:/guides/getting-started.html[Open Liberty入门指南]中的示例应用程序进行操作：
 
-First, clone the link:https://github.com/openliberty/guide-getting-started[Git repository] for the guide:
+首先，克隆指南的link:https://github.com/openliberty/guide-getting-started[Git存储库]：
 
 [source,console]
 ----
@@ -79,7 +79,7 @@ git clone https://github.com/openliberty/guide-getting-started.git
 cd guide-getting-started
 ----
 
-Then, build the application, which is in the `finish/` directory, and deploy it to Open Liberty:
+然后，在'finish/'目录下构建应用程序，并将其部署到Open Liberty：
 
 [source,console]
 ----
@@ -87,17 +87,16 @@ cd finish
 mvn liberty:run
 ----
 
-When you see the following message, your Open Liberty instance is ready:
+当您看到下面的消息时，您的Open Liberty实例已经准备好了:
 
 [source,console]
 ----
 The defaultServer server is ready to run a smarter planet.
 ----
 
-Check out the service at the http://localhost:9080/dev/system/properties URL.
-Stop the running Open Liberty instance by pressing **CTRL+C** in the command-line session where you started Open Liberty.
+在http://localhost:9080/dev/system/properties的URL上查看该服务。在启动Open Liberty的命令行会话中按**CTRL+C**停止正在运行的Open Liberty实例。
 
-Lastly, build the WAR for the application:
+最后，为应用程序构建WAR：
 
 [source,console]
 ----
