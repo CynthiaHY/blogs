@@ -47,7 +47,6 @@ Thomas Watson <https://github.com/tjwatson>
 
 Open Liberty运行时中的InstantOn功能使用IBM Semeru JDK和称为link:https://criu.org/Main_Page[用户空间中的检查点/恢复点](CRIU)的Linux技术来获取应用程序进程的检查点或时间点快照。然后可以非常快速地恢复这个检查点，使应用程序进程恢复到使用检查点时的状态。应用程序可以多次恢复，因为Open Liberty和Semeru JDK保留了容器中每个恢复进程的唯一性。每个恢复的应用程序进程都可以不必先经历整个启动序列而运行，从而节省高达90%的启动时间（取决于您的应用程序）。InstantOn只需要对Java应用程序进行很少的修改就可以实现这种改进。
 
-The following diagram demonstrates how the checkpoint that is taken during the container image build can be used to rapidly start multiple instances of an application in production by restoring them to the checkpointed phase of the application process.
 下图演示了如何在容器镜像构建期间生成检查点，通过将它们恢复到应用程序进程的检查点阶段来快速启动生产环境中多个应用程序实例的。
 
 [.img_border_light]
@@ -55,20 +54,20 @@ image::/img/blog/checkpoint4.jpg[diagram of the checkpoint and restore process,w
 
 InstantOn不能在容器镜像构建之外使用。应用程序容器镜像提供了一个一致的环境，这是确保Open Liberty应用程序进程可靠恢复所必需的。由于InstantOn检查点包含在应用程序容器镜像的最后一层中，因此从检查点创建到镜像恢复期间，镜像底层中的资源不会发生变化。
 
-The following tutorial walks you through containerizing your application using the Open Liberty Java runtime, InstantOn, IBM Semeru JDK, and Podman container tools running on Linux. For general information about containerizing applications with Open Liberty, see the link:/guides/containerize-podman.html[Containerizing microservices with Podman] guide.
+下面的教程将引导您使用Linux上的 Open Liberty Java运行时、InstantOn、IBM Semeru JDK和Podman容器工具对应用程序进行容器化。有关使用Open Liberty容器化应用程序的信息，请参阅link:/guides/containerize-podman.html[使用Podman进行容器化微服务]指南。
 
-== Prerequisites to checkpoint/restore a containerized application
+== 检查点/恢复容器化应用程序的先决条件
 
-Currently, link:/blog/2023/06/27/23.0.0.6.html[Open Liberty version 23.0.0.6] or later supports running with InstantOn only on x86-64/amd64 architectures.
-All our testing was done on RHEL 9.0 and Ubuntu 22.04 but it might also be possible to run on other Linux distributions and versions if they have the following prerequisites:
+目前，link:/blog/2023/06/27/23.0.0.6.html[Open Liberty 23.0.0.6]或更高版本只支持在x86-64/amd64架构上运行InstantOn。我们所有的测试都是在RHEL 9.0和Ubuntu 22.04上完成的，但如果具备以下先决条件，也可以在其他Linux发行版本上运行:
 
--	The kernel must support the Linux link:https://man7.org/linux/man-pages/man7/capabilities.7.html[CAP_CHECKPOINT_RESTORE] capability. This capability was introduced in kernel version 5.9.
--	The latest available version of Podman for the Linux distribution must be installed.
--	The Linux distribution must allow the execution of privileged container builds by using Podman or Docker.
+-	内核必须支持Linux link:https://man7.org/linux/man-pages/man7/capabilities.7.html[CAP_CHECKPOINT_RESTORE]功能，此功能是在内核5.9版本中引入的
+-	必须安装Linux发行版最新版本的Podman
+-	Linux发行版必须允许使用Podman或Docker来执行特权容器构建
 
 For more information about the runtime and host build system prerequisites, see the link:/docs/latest/instanton.html#prereq[Open Liberty InstantOn documentation].
+有关运行时和主机构建系统先决条件的更多信息，请参阅link:/docs/latest/instanton.html#prereq[Open Liberty InstantOn文档]
 
-== Create an application WAR file
+== 创建一个应用程序WAR文件
 
 If you don’t have an application of your own handy, you can follow along with an example application from the link:/guides/getting-started.html[Getting started with Open Liberty guide].
 
